@@ -1,6 +1,6 @@
 plugin: proxmox
 url: https://10.80.8.10:8006/api2/json
-user: root@pam!awx
+user: root@pam
 token_id: awx
 token_secret: a1f25cb5-f3c7-4067-99af-98c695c0df54
 validate_certs: false
