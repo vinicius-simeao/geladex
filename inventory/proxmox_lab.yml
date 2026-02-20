@@ -1,4 +1,4 @@
-plugin: community.proxmox.proxmox
+plugin: proxmox
 url: https://10.80.8.10:8006/api2/json
 user: root@pam!awx
 token_id: awx
