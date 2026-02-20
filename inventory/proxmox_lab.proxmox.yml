@@ -1,7 +1,7 @@
 plugin: community.proxmox.proxmox
 strict: false
 
-url: https://10.80.8.10:8006/api2/json
+url: https://10.80.8.10:8006
 user: root@pam
 token_id: awx
 token_secret: a1f25cb5-f3c7-4067-99af-98c695c0df54
