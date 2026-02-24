@@ -1,4 +1,4 @@
-plugin: community.proxmox.proxmox
+plugin: community.proxmox.proxmox_vm_inventory
 strict: false
 
 url: https://10.80.8.10:8006
