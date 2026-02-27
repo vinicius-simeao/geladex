@@ -1,0 +1,2 @@
+plugin: script
+script: inventory/proxmox_agent_inventory.py
