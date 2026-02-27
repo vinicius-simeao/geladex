@@ -10,4 +10,4 @@ validate_certs: false
 want_facts: true
 
 compose:
-  ansible_host: proxmox_description | regex_findall('[0-9]+(?:\\.[0-9]+){3}') | first
+  ansible_host: proxmox_description | regex_search('\\* IP\\(s\\): ([0-9.]+)', '\\1')
