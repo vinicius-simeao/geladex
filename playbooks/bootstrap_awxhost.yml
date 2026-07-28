@@ -1,0 +1,32 @@
+---
+- name: Bootstrap usuário AWX
+  hosts: all
+  become: yes
+  vars:
+    awx_pubkey: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICdq2GP+ngljsQD/1lpU1ocAYLQqmt7cZhXZ9e/cmy6N root@awx"
+  tasks:
+    - name: Criar usuário awxhost
+      user:
+        name: awxhost
+        shell: /bin/bash
+        create_home: yes
+
+    - name: Criar diretório .ssh
+      file:
+        path: /home/awxhost/.ssh
+        state: directory
+        owner: awxhost
+        group: awxhost
+        mode: '0700'
+
+    - name: Adicionar chave pública do AWX
+      authorized_key:
+        user: awxhost
+        key: "{{ awx_pubkey }}"
+
+    - name: Permitir sudo sem senha
+      lineinfile:
+        path: /etc/sudoers.d/awxhost
+        line: "awxhost ALL=(ALL) NOPASSWD: ALL"
+        create: yes
+        validate: 'visudo -cf %s'
