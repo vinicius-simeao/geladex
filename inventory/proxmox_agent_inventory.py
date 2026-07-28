@@ -2,6 +2,9 @@
 import requests
 import json
 import os
+import urllib3
+
+urllib3.disable_warnings()
 
 PROXMOX_URL = os.getenv("PROXMOX_URL")
 PROXMOX_TOKEN_ID = os.getenv("PROXMOX_TOKEN_ID")
@@ -25,7 +28,7 @@ def get_vms():
         timeout=10
     )
     r.raise_for_status()
-    return r.json()["data"]
+    return r.json().get("data", [])
 
 
 def get_vm_ip(node, vmid):
@@ -38,8 +41,8 @@ def get_vm_ip(node, vmid):
         )
         if r.status_code != 200:
             return None
-        payload = r.json()
-        data = payload.get("data")
+        json_data = r.json()
+        data = json_data.get("data")
         if not data:
             return None
         result = data.get("result", data) if isinstance(data, dict) else data
@@ -47,19 +50,19 @@ def get_vm_ip(node, vmid):
             if interface.get("name") == "lo":
                 continue
             for ip in interface.get("ip-addresses", []):
-                if ip.get("ip-address-type") == "ipv4" and not ip["ip-address"].startswith("127."):
-                    return ip["ip-address"]
+                if ip.get("ip-address-type") == "ipv4" and not ip.get("ip-address", "").startswith("127."):
+                    return ip.get("ip-address")
         return None
-    except (requests.exceptions.RequestException, ValueError, KeyError):
+    except Exception:
         return None
 
 
 for vm in get_vms():
-    if vm["status"] != "running":
+    if vm.get("status") != "running":
         continue
-    node = vm["node"]
-    vmid = vm["vmid"]
-    name = vm["name"]
+    node = vm.get("node")
+    vmid = vm.get("vmid")
+    name = vm.get("name")
     ip = get_vm_ip(node, vmid)
     if ip:
         inventory["all"]["hosts"].append(name)
