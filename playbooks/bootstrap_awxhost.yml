@@ -20,9 +20,13 @@
         mode: '0700'
 
     - name: Adicionar chave pública do AWX
-      authorized_key:
-        user: awxhost
-        key: "{{ awx_pubkey }}"
+      lineinfile:
+        path: /home/awxhost/.ssh/authorized_keys
+        line: "{{ awx_pubkey }}"
+        create: yes
+        owner: awxhost
+        group: awxhost
+        mode: '0600'
 
     - name: Permitir sudo sem senha
       lineinfile:
